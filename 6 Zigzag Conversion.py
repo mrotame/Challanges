@@ -38,25 +38,35 @@ s consists of English letters (lower-case and upper-case), ',' and '.'.
 # Result
 
 class Solution:
+    numRows: int
+    table: list
+    activeCol = 0
+    activeRow = 0
+    letter = 0
+    
     def convert(self, s: str, numRows: int) -> str:
-        table = [['' for i in s] for i in range(numRows)]
-        activeCol = 0
-        activeRow = 0
-        letter = 0
-        while letter <= len(s)-1:
-            if activeRow == 0:
-                while activeRow < numRows and letter <= len(s)-1:
-                    table[activeRow][activeCol] = s[letter]
-                    letter += 1
-                    activeRow += 1
-                activeCol += 1
-            
-            if activeRow == numRows:
-                activeRow -= 1
-                while activeRow > 1 and letter <= len(s)-1:
-                    activeRow -= 1
-                    table[activeRow][activeCol] = s[letter]
-                    activeCol += 1
-                    letter += 1
-                activeRow = 0
-        return ''.join([''.join(i) for i in table])
+        self.numRows = numRows
+        self.table = [['' for i in s] for i in range(numRows)]
+        while self.letter <= len(s)-1:
+            if self.activeRow == 0:
+                self.allWayDown(s)
+            if self.activeRow == self.numRows:
+                self.stairUp(s)
+        return ''.join([''.join(i) for i in self.table])
+
+    def allWayDown(self, s:str)->None:
+        while self.activeRow < self.numRows and self.letter <= len(s)-1:
+            self.table[self.activeRow][self.activeCol] = s[self.letter]
+            self.letter += 1
+            self.activeRow += 1
+        self.activeCol += 1
+    
+    def stairUp(self, s:str)->None:
+        self.activeRow -= 1
+        while self.activeRow > 1 and self.letter <= len(s)-1:
+            self.activeRow -= 1
+            self.table[self.activeRow][self.activeCol] = s[self.letter]
+            self.activeCol += 1
+            self.letter += 1
+        self.activeRow = 0
+    
